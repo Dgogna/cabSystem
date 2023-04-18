@@ -3,6 +3,26 @@ const express=require("express");
 const router=express.Router();
 const Cab=require("../models/cab");
 
+router.get("/available",async(req,res)=>{
+    try {
+        const cabs=await Cab.find({});
+        // for (var i=0;i<cabs.length;i++) {
+        //     console.log(cabs[i]);
+        //     if(cabs[i].bookings.length >0){
+        //         var last= cabs[i].bookings.length -1;
+        //         const anyTime = cabs[i].bookings[last].getTime();
+        //         const currentTime = new Date().getTime();
+        //         if(anyTime >= currentTime){
+        //             delete cabs[i];
+        //         }
+        //     }
+        //  }
+        return res.json(cabs);
+
+    } catch (error) {
+        return res.json(error);
+    }
+})
 
 router.post("/create",async (req,res)=>{
     try {

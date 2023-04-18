@@ -1,7 +1,7 @@
 
 const express=require("express");
 const router=express.Router();
-
+const Cab=require("../models/cab");
 const Booking=require("../models/booking");
 
 
@@ -16,6 +16,11 @@ router.post("/create",async (req,res)=>{
             cab_type:cab_type,
             finishing_time:finishing_time
         })
+
+        const prev = await Cab.findOne({name:cab_type});
+        // console.log(prev);
+        prev.bookings.push(finishing_time);
+        prev.save();
         // console.log(cab);
         return res.json(booking);
 

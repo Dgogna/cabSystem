@@ -9,7 +9,10 @@ const cabSchema=new mongoose.Schema({
     charge:{
         type:Number,
         required:true
-    }
+    },
+    bookings:[{
+        type:String
+    }]
 },{timestamps:true});
 
 module.exports=mongoose.model("cab",cabSchema);
