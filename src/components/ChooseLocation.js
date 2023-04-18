@@ -65,7 +65,7 @@ const ChooseLocation = () => {
 
         let cost = find_cost(location.source, location.destination);
 
-        console.log("Time Taken to Go from " + location.source + " " + location.destination + " is " + cost + " mins.");
+        // console.log("Time Taken to Go from " + location.source + " " + location.destination + " is " + cost + " mins.");
 
         // console.log(cabs);
         setTime(cost);
@@ -74,17 +74,43 @@ const ChooseLocation = () => {
 
     }
 
+    
+
     const confirm_book = (e) => {
         e.preventDefault();
-        console.log("your booking is confirmed");
-        console.log(time);
+        const config={
+            Username:"dhruvgogna01@gmail.com",
+            Password:"5500C47EE15CDA5C98FEC3F17691634A295C",
+            Host:"smtp.elasticemail.com",
+            Port:2525,
+            To : location.email,
+            From : "dhruvgogna01@gmail.com",
+            Subject : "Your Booking is Scheduled Succesfully",
+            Body : `You Have Succesfully Booked the Cab .
+                    Your Pickup Locations is point ${location.source} and Your Drop location is Point ${location.destination}
+                    Estimated Time to reach the Destination is ${time} minutes
+                    and your Cab name is ${cab} .
+
+                    Hope You Will Enjoy the journey.
+            `
+        }
+        // console.log("your booking is confirmed");
+        // console.log(time);
         let dt = new Date();
         dt = (new Date(dt.getTime() + time * 60 * 1000));
-        console.log(dt);
+        // console.log(dt);
         //  ut.innerText = "Updated Time : " + dt.toLocaleTimeString();
         setShow("false");
-        console.log(cab);
+        // console.log(cab);
         do_booking(location.email, location.source, location.destination, cab, dt);
+
+        // here we are sending the mail to the user who has done the booking
+        if(window.Email){
+            window.Email.send(config).then(()=>{alert("email send succesfully")});
+        }
+
+
+
         setLocation({ email: "", source: "", destination: "" })
     }
 
@@ -130,6 +156,8 @@ const ChooseLocation = () => {
                                 onChange={e => setCab(e.target.value)} />
                             <label className="form-check-label" htmlFor={cab.name} />
                             {cab.name}
+
+                            <p>fair for this cab is {cab.charge * time} rs</p>
                         </div>
                     </div>
                 );
