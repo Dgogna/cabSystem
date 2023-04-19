@@ -1,16 +1,22 @@
 import React from 'react'
 
 const cab = (props) => {
+
+    const {cab,update_cab} = props;
+
     return (
         <div>
-            {/* <h4>{props.name +"     "+ (props.cab_charge * props.time)} </h4> */}
+            a simple cab
             {/* <div className="form-check">
-                <input className="form-check-input" type="radio" name="cabs" value={props.name} id={props.name}
+                <input className="form-check-input" type="radio" name="cabs" value={cab.name} id={cab.name}
                     onChange={e => setCab(e.target.value)} />
-                <label className="form-check-label" htmlFor="cab1" />
-                car 1
+                <label className="form-check-label" htmlFor={cab.name} />
+                {cab.name}
 
-            </div> */}
+                <p>fair for this cab is {cab.charge * time} rs</p> */}
+                <button type='Submit' onClick={()=>{update_cab(cab)}}> Update_cab </button>
+            {/* </div> */}
+
         </div>
     )
 }

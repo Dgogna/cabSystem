@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState,useRef } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Taxis from './Taxis';
 import cabContext from '../context/cabContext';
 import Cab from "./cab";
@@ -6,13 +7,18 @@ import Cab from "./cab";
 
 const ChooseLocation = () => {
 
+    const ref = useRef(null);
+    const closeRef=useRef(null);
 
     const [location, setLocation] = useState({ email: "", source: "", destination: "" });
     const [time, setTime] = useState(0);
     const [cab, setCab] = useState();
+    const [updated_cab,setUpdated_cab] =useState({id:"",name:"",charge:""})
+
+    const Navigate=useNavigate();
 
     const context = useContext(cabContext);
-    const { cabs, getCabs, do_booking } = context
+    const { cabs, getCabs, do_booking , updating_cab} = context
 
     const find_cost = (src, des) => {
         // console.log(src   +" "+des);
@@ -79,12 +85,12 @@ const ChooseLocation = () => {
     const confirm_book = (e) => {
         e.preventDefault();
         const config={
-            Username:"dhruvgogna01@gmail.com",
-            Password:"5500C47EE15CDA5C98FEC3F17691634A295C",
+            Username:"@gmail.com",
+            Password:"",
             Host:"smtp.elasticemail.com",
             Port:2525,
             To : location.email,
-            From : "dhruvgogna01@gmail.com",
+            From : "",
             Subject : "Your Booking is Scheduled Succesfully",
             Body : `You Have Succesfully Booked the Cab .
                     Your Pickup Locations is point ${location.source} and Your Drop location is Point ${location.destination}
@@ -105,13 +111,33 @@ const ChooseLocation = () => {
         do_booking(location.email, location.source, location.destination, cab, dt);
 
         // here we are sending the mail to the user who has done the booking
-        if(window.Email){
-            window.Email.send(config).then(()=>{alert("email send succesfully")});
-        }
+        // if(window.Email){
+        //     window.Email.send(config).then(()=>{alert("email send succesfully")});
+        // }
 
 
 
         setLocation({ email: "", source: "", destination: "" })
+    }
+
+    const update_cab=(current_cab)=>{
+        // e.preventDefault();
+        // Navigate("/cab");
+        // console.log(current_cab);
+        ref.current.click();
+        setUpdated_cab({id:current_cab._id,name:current_cab.name,charge:current_cab.charge})
+    }
+
+    const handle_cab_update=(e)=>{
+        e.preventDefault();
+        closeRef.current.click();
+        // console.log(updated_cab);
+        // console.log("now here the cab eill be updated");
+        updating_cab(updated_cab.id,updated_cab.name,updated_cab.charge);
+    }
+
+    const onChangeUpdate=(e)=>{
+        setUpdated_cab({...updated_cab,[e.target.name]:e.target.value});
     }
 
     const onChange = (e) => {
@@ -140,15 +166,54 @@ const ChooseLocation = () => {
                 <button type='Submit' onClick={handleClick}> Find Taxi </button>
             </form>
 
-            {/* {show==="true" && <Taxis />} */}
-            {/* { show==="true" && cabs.map((cab) => {
-                    return <h4>{cab.name + "    "+ (cab.charge * time)}</h4>;
-                })} */}
+
+            {/* <!-- Button trigger modal --> */}
+            <button type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal" ref={ref}>
+                Launch demo modal
+            </button>
+
+            {/* <!-- Modal --> */}
+            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="exampleModalLabel">Update</h1>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <form>
+                                <div className="mb-3">
+                                    <label htmlFor="name" className="form-label">Title</label>
+                                    <input type="text" className="form-control" id="name" aria-describedby="emailHelp" autoComplete="off" name="name" onChange={onChangeUpdate} value={updated_cab.name} />
+
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="charge" className="form-label">Description</label>
+                                    <input type="text" className="form-control" id="charge" name="charge" autoComplete="off" onChange={onChangeUpdate} value={updated_cab.charge} />
+                                </div>
+                                {/* <div className="mb-3">
+                                    <label htmlFor="edittag" className="form-label">Tag</label>
+                                    <input type="text" className="form-control" id="edittag" name="edittag" autoComplete="off" onChange={onChange} value={editnote.edittag} />
+                                </div> */}
+
+                            </form>
+                        </div>
+                        <div className="modal-footer">
+                            <button ref={closeRef} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button onClick={handle_cab_update} type="button" className="btn btn-primary">Update Note</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
             {show === "true" &&
                <div>yoy will reach the destination in {time} minutes</div>
             }
             {show === "true" && cabs.map((cab) => {
-                return (
+                return ( 
                     <div>
                         
                         <div className="form-check">
@@ -158,23 +223,13 @@ const ChooseLocation = () => {
                             {cab.name}
 
                             <p>fair for this cab is {cab.charge * time} rs</p>
+                            <Cab key={cab._id} update_cab={update_cab} cab={cab}></Cab>
+                            {/* <button type='Submit' onClick={update_cab}> Update_cab </button> */}
                         </div>
                     </div>
                 );
             })}
-            {/* <div className="form-check">
-                <input className="form-check-input" type="radio" name="cabs" value="car 1" id="cab1"
-                    onChange={e => setCab(e.target.value)} />
-                <label className="form-check-label" htmlFor="cab1" />
-                car 1
-            </div>
-            <div className="form-check">
-                <input className="form-check-input" type="radio" name="cabs" value="car 2" id="cab2"
-                    onChange={e => setCab(e.target.value)} />
-                <label className="form-check-label" htmlFor="cab2">
-                    car2
-                </label>
-            </div> */}
+
             {show === "true" &&
                 <button type='Submit' onClick={confirm_book}> Confirm Your Booking </button>
             }
