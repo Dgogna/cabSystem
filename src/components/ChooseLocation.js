@@ -70,6 +70,11 @@ const ChooseLocation = () => {
         // console.log("the click has been done");
         // console.log(location);
 
+        if(location.email==="" || location.source==="" || location.destination===""){
+            alert("please fill all the input Fields");
+            return ;
+        }
+
         let cost = find_cost(location.source, location.destination);
 
         // console.log("Time Taken to Go from " + location.source + " " + location.destination + " is " + cost + " mins.");
@@ -78,6 +83,19 @@ const ChooseLocation = () => {
         setTime(cost);
         getCabs();
         setShow("true");
+        // window.scroll({
+        //     top: document.body.offsetHeight,
+        //     left: 0, 
+        //     behavior: 'smooth',
+        //   });
+    }
+
+    const scroll_bottom=()=>{
+        window.scroll({
+            top: document.body.offsetHeight,
+            left: 0, 
+            behavior: 'smooth',
+          });
     }
 
 
@@ -85,12 +103,10 @@ const ChooseLocation = () => {
     const confirm_book = (e) => {
         e.preventDefault();
         const config = {
-            Username: "@gmail.com",
-            Password: "",
-            Host: "smtp.elasticemail.com",
-            Port: 2525,
+            SecureToken : "752df869-f80f-4ab8-8817-7e84de47c62a",
+
             To: location.email,
-            From: "",
+            From: "dhruvgogna01@gmail.com",
             Subject: "Your Booking is Scheduled Succesfully",
             Body: `You Have Succesfully Booked the Cab .
                     Your Pickup Locations is point ${location.source} and Your Drop location is Point ${location.destination}
@@ -111,14 +127,14 @@ const ChooseLocation = () => {
         do_booking(location.email, location.source, location.destination, cab, dt);
 
         // here we are sending the mail to the user who has done the booking
-        // if(window.Email){
-        //     window.Email.send(config).then(()=>{alert("email send succesfully")});
-        // }
+        if(window.Email){
+            window.Email.send(config).then(()=>{alert("Booking Confirmed and email has been  send succesfully to your respective email address")});
+        }
 
 
         
         setLocation({ email: "", source: "", destination: "" })
-        alert("Your Booking Has Been Confirmed");
+        // alert("Your Booking Has Been Confirmed");
     }
 
     const update_cab = (current_cab) => {
@@ -156,16 +172,16 @@ const ChooseLocation = () => {
                 <div className="mb-3" style={{marginTop:0}}>
                 
                     <label htmlFor="email" className="form-label">Email</label>
-                    <input type="text" className="form-control" id="email" aria-describedby="emailHelp" name="email" onChange={onChange} value={location.email} />
+                    <input required type="text" className="form-control" id="email" aria-describedby="emailHelp" name="email" onChange={onChange} value={location.email} />
 
                 </div>
                 <div className="mb-3">
                     <label htmlFor="source" className="form-label">Source</label>
-                    <input type="text" className="form-control" id="source" name="source" onChange={onChange} value={location.source} />
+                    <input required type="text" className="form-control" id="source" name="source" onChange={onChange} value={location.source} />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="destination" className="form-label">Destination</label>
-                    <input type="text" className="form-control" id="destination" name="destination" onChange={onChange} value={location.destination} />
+                    <input required type="text" className="form-control" id="destination" name="destination" onChange={onChange} value={location.destination} />
                 </div>
 
                 <div class="d-grid gap-1" style={{ padding: 40 }}>
@@ -248,7 +264,8 @@ const ChooseLocation = () => {
 
 
 
-
+            
+            
             {show === "true" &&
             <div style={{padding:6,marginLeft:20}}>
                 <h3 >You will reach the destination in {time} minutes.</h3>
@@ -315,6 +332,7 @@ const ChooseLocation = () => {
                 <button type='Submit' class="w-100 btn btn-lg btn-dark" onClick={confirm_book}> Confirm Your Booking </button>
             }
 
+{show==="true" && scroll_bottom()}
 
         </div>
     )

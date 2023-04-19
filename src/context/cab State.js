@@ -3,7 +3,8 @@ import CabContext from "./cabContext"
 
 const CabState=(props)=>{
 
-    const [cabs,setCabs] = useState(["car1","car2"]);
+    const [cabs,setCabs] = useState([]);
+    const [bookings,setBookings] = useState([]);
 
     // create a booking 
 
@@ -70,6 +71,22 @@ const CabState=(props)=>{
         //   console.log(json);
     }
 
+    const get_all_bookings=async()=>{
+        const response = await fetch("http://localhost:5000/booking/all_bookings", {
+            method: 'GET', 
+            mode: 'cors', 
+            cache: 'no-cache', 
+            credentials: 'same-origin',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+    
+          const bookings=await response.json();
+        //   console.log(bookings);
+          setBookings(bookings);
+    }
+
     // all available cabs
     const getCabs=async()=>{
         const response = await fetch("http://localhost:5000/cab/available", {
@@ -108,7 +125,7 @@ const CabState=(props)=>{
 
 
     return (
-        <CabContext.Provider value={{cabs,getCabs,do_booking,updating_cab}}>
+        <CabContext.Provider value={{cabs,getCabs,do_booking,updating_cab,bookings,get_all_bookings}}>
             {props.children}
         </CabContext.Provider>
     )

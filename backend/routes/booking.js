@@ -29,6 +29,16 @@ router.post("/create",async (req,res)=>{
     }
 });
 
+router.get("/all_bookings",async(req,res)=>{
+    try {
+        const bookings=await Booking.find({});
+        return res.json(bookings);
+
+    } catch (error) {
+        return res.json(error);
+    }
+})
+
 
 
 module.exports=router;
