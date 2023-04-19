@@ -1,16 +1,17 @@
 ## Cab Syatem Project
 
-## To Start the projest
+## To Start the project
 write the following commands
 -->   cd Backend
 -->   npm i
 -->   node index.js
 
 ## now open a new terminal and write the folowing commands
+-->   npm i
 -->   npm start 
 inorder to start the project
 
-Now the project will be live
+###Now the project will be live
 
 here firstly we cab bood a cab cab by only choosing the source and destination 
 
